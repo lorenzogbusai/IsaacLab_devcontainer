@@ -187,6 +187,12 @@ def get_checkpoint_path(
 
     """
     # check if runs present in directory
+    # Allow run_dir to specify experiment_name/run_name
+    if "/" in run_dir:
+        experiment_name, actual_run_dir = run_dir.split("/", 1)
+        log_path = os.path.join(os.path.dirname(log_path), experiment_name)
+        run_dir = actual_run_dir
+    
     try:
         # find all runs in the directory that math the regex expression
         runs = [

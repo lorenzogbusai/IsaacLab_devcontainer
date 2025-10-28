@@ -126,6 +126,103 @@ class RslRlPpoAlgorithmCfg:
     """The symmetry configuration. Default is None, in which case symmetry is not used."""
 
 
+@configclass
+class RslRlDppoAlgorithmCfg:
+    """Configuration for the DPPO algorithm."""
+
+    class_name: str = "DPPO"
+    """The algorithm class name. Default is DPPO."""
+
+    num_learning_epochs: int = MISSING
+    """The number of learning epochs per update."""
+
+    num_mini_batches: int = MISSING
+    """The number of mini-batches per update."""
+
+    learning_rate: float = MISSING
+    """The learning rate for the policy."""
+
+    schedule: str = MISSING
+    """The learning rate schedule."""
+
+    gamma: float = MISSING
+    """The discount factor."""
+
+    lam: float = MISSING
+    """The lambda parameter for Generalized Advantage Estimation (GAE)."""
+
+    entropy_coef: float = MISSING
+    """The coefficient for the entropy loss."""
+
+    desired_kl: float = MISSING
+    """The desired KL divergence."""
+
+    max_grad_norm: float = MISSING
+    """The maximum gradient norm."""
+
+    value_loss_coef: float = MISSING
+    """The coefficient for the value loss."""
+
+    use_clipped_value_loss: bool = MISSING
+    """Whether to use clipped value loss."""
+
+    clip_param: float = MISSING
+    """The clipping parameter for the policy."""
+
+    normalize_advantage_per_mini_batch: bool = False
+    """Whether to normalize the advantage per mini-batch. Default is False.
+
+    If True, the advantage is normalized over the mini-batches only.
+    Otherwise, the advantage is normalized over the entire collected trajectories.
+    """
+
+    # DPPO-specific parameters
+    critic_activations: list[str] = ["relu", "relu", "relu"]
+    """The activations to use for the critic network. Default is ["relu", "relu", "relu"]."""
+
+    critic_network: str = "qrdqn"
+    """The critic network to use. Options are "qrdqn" or "iqn". Default is "qrdqn"."""
+
+    iqn_action_samples: int = 32
+    """The number of samples to use for the critic IQN network when acting. Default is 32."""
+
+    iqn_embedding_size: int = 64
+    """The embedding size to use for the critic IQN network. Default is 64."""
+
+    iqn_feature_layers: int = 1
+    """The number of feature layers to use for the critic IQN network. Default is 1."""
+
+    iqn_value_samples: int = 8
+    """The number of samples to use for the critic IQN network when computing the value. Default is 8."""
+
+    qrdqn_quantile_count: int = 200
+    """The number of quantiles to use for the critic QR network. Default is 200."""
+
+    value_lambda: float = 0.95
+    """The lambda parameter for the SR(lambda) value target computation. Default is 0.95."""
+
+    value_loss: str = "quantile_l1"
+    """The loss function to use for the critic network. Default is "quantile_l1"."""
+
+    value_loss_kwargs: dict = {}
+    """Keyword arguments for computing the value loss. Default is empty dict."""
+
+    value_measure: str | None = None
+    """The probability measure to apply to the critic network output distribution when updating the policy. Default is None."""
+
+    value_measure_adaptation: tuple | None = None
+    """Controls adaptation of the value measure. If None, no adaptation is performed. Default is None."""
+
+    value_measure_kwargs: dict = {}
+    """The keyword arguments to pass to the value measure. Default is empty dict."""
+
+    rnd_cfg: RslRlRndCfg | None = None
+    """The RND configuration. Default is None, in which case RND is not used."""
+
+    symmetry_cfg: RslRlSymmetryCfg | None = None
+    """The symmetry configuration. Default is None, in which case symmetry is not used."""
+
+
 #########################
 # Runner configurations #
 #########################
