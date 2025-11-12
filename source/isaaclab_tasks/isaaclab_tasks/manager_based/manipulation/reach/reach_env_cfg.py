@@ -26,6 +26,7 @@ from isaaclab.utils.assets import ISAAC_NUCLEUS_DIR
 from isaaclab.utils.noise import AdditiveUniformNoiseCfg as Unoise
 
 import isaaclab_tasks.manager_based.manipulation.reach.mdp as mdp
+from .teacher_policy import SimpleTeacherPolicy
 
 ##
 # Scene definition
@@ -112,8 +113,24 @@ class ObservationsCfg:
             self.enable_corruption = True
             self.concatenate_terms = True
 
+    @configclass
+    class PrivilegedCfg(ObsGroup):
+        """Privileged observations for teacher policy (not available to student)."""
+
+        # full state information
+        joint_pos_full = ObsTerm(func=mdp.joint_pos)
+        joint_vel_full = ObsTerm(func=mdp.joint_vel)
+        joint_torque = ObsTerm(func=mdp.joint_effort)
+        ee_pose = ObsTerm(func=mdp.body_pose_w, params={"asset_cfg": SceneEntityCfg("robot", body_names="panda_hand")})
+        actions_full = ObsTerm(func=mdp.last_action)
+
+        def __post_init__(self):
+            self.enable_corruption = False
+            self.concatenate_terms = True
+
     # observation groups
     policy: PolicyCfg = PolicyCfg()
+    privileged: PrivilegedCfg = PrivilegedCfg()
 
 
 @configclass

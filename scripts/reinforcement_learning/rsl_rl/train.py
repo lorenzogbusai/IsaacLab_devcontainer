@@ -70,6 +70,14 @@ if version.parse(installed_version) < version.parse(RSL_RL_VERSION):
     )
     exit(1)
 
+# Use workspace RSL-RL if available (for development with DPPO support)
+import sys
+import os
+workspace_rsl_rl = os.path.join(os.path.dirname(__file__), "..", "..", "..", "rsl_rl")
+if os.path.exists(workspace_rsl_rl):
+    sys.path.insert(0, workspace_rsl_rl)
+    print(f"[INFO] Using workspace RSL-RL from: {workspace_rsl_rl}")
+
 """Rest everything follows."""
 
 import gymnasium as gym

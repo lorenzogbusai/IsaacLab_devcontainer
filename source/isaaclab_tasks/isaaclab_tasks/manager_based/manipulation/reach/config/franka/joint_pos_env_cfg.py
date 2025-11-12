@@ -9,6 +9,8 @@ from isaaclab.utils import configclass
 
 import isaaclab_tasks.manager_based.manipulation.reach.mdp as mdp
 from isaaclab_tasks.manager_based.manipulation.reach.reach_env_cfg import ReachEnvCfg
+from isaaclab_tasks.manager_based.algorithms.rma.config import RmaObservationCfg
+from isaaclab_tasks.manager_based.algorithms.rma.observation_term import rma_observation_term
 
 ##
 # Pre-defined configs
@@ -42,6 +44,21 @@ class FrankaReachEnvCfg(ReachEnvCfg):
         # end-effector is along z-direction
         self.commands.ee_pose.body_name = "panda_hand"
         self.commands.ee_pose.ranges.pitch = (math.pi, math.pi)
+
+        # add RMA observation term to the policy observation group
+        # we register the class to be instantiated by the ObservationManager
+        self.observations.policy.rma_latent = RmaObservationCfg(
+            func=rma_observation_term,
+            latent_dim=16,
+            history_length=8,
+            encoder_type="mlp",
+            encoder_hidden=(128, 128),
+            adapter_mode="online",
+            adapter_hidden=(64,),
+            inner_loop_steps=3,
+            inner_loop_lr=1e-2,
+            per_env_opt=True,
+        )
 
 
 @configclass
